@@ -1,0 +1,69 @@
+body {
+
+}
+
+.title {
+  transform: translate3d(0, 0, 0);
+}
+
+.card {
+  position: relative;
+  display: inline-block;
+  min-height: 100px;
+  /*min-width: 68.86px;*/
+  width: 0px;
+  overflow: visible;
+  cursor: pointer;
+  transition: transform 0.8s ease, width 2s ease;
+}
+
+.card.rotate {
+  transform: rotateY(90deg) rotateZ(90deg);
+}
+
+.card.selected {
+  width: 50px;
+  transform: translateY(-15px);
+}
+
+.card_image {
+  position: absolute;
+  max-height: 100%;
+  max-width: 100%;
+  height: 100px;
+  min-width: 68.86px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.card_image.top {
+  z-index: 1;
+}
+
+.card_image.bottom {
+  z-index: 0;
+}
+
+.card_image:hover {
+  filter: invert(25%);
+}
+
+.card_image.selected {
+  filter: invert(25%);
+}
+
+/*THINK ABOUT IT when a card is added to deck give it a special flag
+  when that card is displayed, it has 100% inversion and then animates
+  back to 0 after a short amount of time
+  COOL */
+
+.hand {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 200px;
+  max-width: 100%;
+  margin-right: 45px;
+  margin-left: 45px;
+}
