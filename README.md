@@ -3,7 +3,7 @@ Javascript application for playing gin rummy over the web
 
 # usage
 Your main server file should look like this:
-
+'''javascript
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -30,3 +30,4 @@ wss.on('connection', function(ws) {
     ginrummy.addClient(ws);
   }
 });
+'''
