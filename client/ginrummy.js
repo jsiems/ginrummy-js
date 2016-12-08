@@ -5,7 +5,7 @@ var game;
 var hand = [];
 var myturn = 0;
 var state = "NOSTATE";
-var cardHTML = "<div id='ID' class='card'><img id='ID_image' class='card_image' alt='card' src='public/img/cards/ID.png'></div>";
+var cardHTML = "<div id='ID' class='card'><img id='ID_image' class='card_image' alt='card' src='images/cards/ID.png'></div>";
 var discardSelection = "";
 var playerready = 0;
 
