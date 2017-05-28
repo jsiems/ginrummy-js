@@ -95,18 +95,18 @@ function inHand(card, deck) {
   //  trying to return out of the for each loop
   //  does not work
   var found = false;
-  
+
   if(deck == null) {
     console.log("Deck is null");
   }
-  
+
   deck.forEach(function(item){
     if(item.getValue() == card.getValue() && item.getSuit() == card.getSuit()) {
         found = true;
         return;
       }
   });
-  
+
   return found;
 }
 
@@ -114,7 +114,7 @@ function removeCard(card, deck) {
   if(deck == null) {
     console.log("Very big very bad error");
   }
-  
+
   deck.forEach(function(item, index){
     if(item.getValue() == card.getValue() && item.getSuit() == card.getSuit()) {
         deck.splice(index, 1);
@@ -129,7 +129,7 @@ function addCard(card, deck) {
   if(deck == null) {
     deck = hand;
   }
-  
+
   for(var i = 0; i < deck.length; i ++) {
     if(Number(deck[i].getValue()) > Number(card.getValue())){
       deck.splice(i, 0, card);
