@@ -2,72 +2,21 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-  <!--meta name="theme-color" content="#1a1a1a" /-->
-  <link rel="stylesheet" type="text/css" href="ginrummy.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src="ginrummy.js"></script>
-  <title>Gin Rummy</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+ <!--meta name="theme-color" content="#1a1a1a" /-->
+ <link rel="stylesheet" type="text/css" href="ginrummy.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+ <script src="ginrummy.js"></script>
+ <title>Gin Rummy</title>
 </head>
 
 <body>
-  <div class="title">gin rummy</div>
-  
-  <div id="connect">  
-    <textarea id="usernameTextarea" placeholder="username"></textarea>
-    <textarea id="gameTextarea" placeholder="game"></textarea>
-    <button onclick="connect()">join/create game</button>
-  </div>
-
-  <div id="connected">
-    <div id="player">player name</div>
-    <div id="opponent">opponent name</div>
-    <div id="waiting">Waiting for another player to join...</div>
-    <button onclick="disconnect();">disconnect</button>
-    <br>
-    <div id="messageBox">messagebox</div>
-    <br>
-    <div id="ready">
-      <button id="readybutton">ready</button>
-      <br>
-      <br>
-      <div id="ready_playerscore"></div>
-      <div id="ready_opponentscore"></div>
-      <div id="ready_playerhand" class="hand"{></div>
-      <div id="ready_opponenthand" class="hand"></div>
-    </div>
-    <div id="playing">
-      <div id="playerscore"></div>
-      <div id="opponentscore"></div>
-      <br>
-      <div id="discardpile">discard pile</div>
-      <br>
-      <div id="playerhand" class="hand">Player hand: </div>
-      <button id="drawnewbutton">draw new card</button>
-      <button id="drawdiscardbutton">draw discarded card</button>
-      <button id="discardbutton">discard card</button>
-      <input id="knockcheckbox" type="checkbox"> knock
-    </div>
+  <div id="launch_screen" class="launch_screen">
+    <div class="title">gin rummy</div>
+    <div><div class="input_title">Name:</div><input class="input" id="name" type="text"></div>
+	<div><div class="input_title">Room:</div><input class="input" id="room" type="text"></div>
+	<div class="button" id="join_game">Join Game</div>
   </div>
 </body>
-
-  <!--div>
-    <div id='test' class='card'>
-      <img id='test_image' class='card_image top' alt='card' src='public/img/cards/1_of_spades.png'>
-      <img id='test_image_back' class='card_image bottom' alt='cardback' src='public/img/cards/cardback.png'>
-    </div>
-
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div id="testdiscard">
-    discard
-    </div>
-
-  </div-->
 
 </html>

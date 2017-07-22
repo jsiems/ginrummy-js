@@ -1,4 +1,4 @@
-console.log("Loaded the file! Awesome");
+"use strict";
 
 var username;
 var game;

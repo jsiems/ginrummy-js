@@ -1,69 +1,83 @@
-body {
+* {
+  font-family: Verdana, Geneva, sans-serif;
+}
 
+html {
+	height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background-color: white;
+    overflow: visible;
+    z-index: 0;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-transform: translate3d(0,0,0);
+    -webkit-transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    transform: translate3d(0,0,0);
+    transform: translateZ(0);
+	background: green; /* For browsers that do not support gradients */
+	background: -webkit-radial-gradient(#009900, #004d00); /* Safari 5.1 to 6.0 */
+	background: -o-radial-gradient(#009900, #004d00); /* For Opera 11.6 to 12.0 */
+	background: -moz-radial-gradient(#009900, #004d00); /* For Firefox 3.6 to 15 */
+	background: radial-gradient(#009900, #004d00); /* Standard syntax */
+}
+
+/************** LOGIN SCREEN **********************/
+
+.launch_screen {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	max-height: 500px
 }
 
 .title {
-  transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	font-size: 3.5em;
+	text-align: center;
 }
 
-.card {
-  position: relative;
-  display: inline-block;
-  min-height: 100px;
-  /*min-width: 68.86px;*/
-  width: 0px;
-  overflow: visible;
-  cursor: pointer;
-  transition: transform 0.8s ease, width 2s ease;
+.input_title {
+	font-size: 1.5em;
+	width: 200px;
 }
 
-.card.rotate {
-  transform: rotateY(90deg) rotateZ(90deg);
+.input {
+	font-size: 1.5em;
+	width: 200px;
 }
 
-.card.selected {
-  width: 50px;
-  transform: translateY(-15px);
+.button {
+	width: 200px;
+	height: 50px;
+    margin: 50px;
+	
+	background-color: black;
+	color: white;
+	
+	border-radius: 15px;
+	
+	text-align: center;
+	font-size: 1.5em;
+	line-height:50px;
+	
+	transition: color 0.1s linear, box-shadow 0.1s linear;
 }
 
-.card_image {
-  position: absolute;
-  max-height: 100%;
-  max-width: 100%;
-  height: 100px;
-  min-width: 68.86px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.card_image.top {
-  z-index: 1;
-}
-
-.card_image.bottom {
-  z-index: 0;
-}
-
-.card_image:hover {
-  filter: invert(25%);
-}
-
-.card_image.selected {
-  filter: invert(25%);
-}
-
-/*THINK ABOUT IT when a card is added to deck give it a special flag
-  when that card is displayed, it has 100% inversion and then animates
-  back to 0 after a short amount of time
-  COOL */
-
-.hand {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 200px;
-  max-width: 100%;
-  margin-right: 45px;
-  margin-left: 45px;
+.button:hover {
+	cursor: pointer;
+	color: rgb(0, 102, 204);
+	box-shadow: 0px 0px 5px black;
 }
