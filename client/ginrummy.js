@@ -2,6 +2,7 @@
 
 var username;
 var game;
+var ws;
 var hand = [];
 var myturn = 0;
 var state = "NOSTATE";
@@ -278,9 +279,15 @@ function flip(id) {
 }
 
 $(document).ready(function() {
-  $("#connected").hide();
-  $("#playing").hide();
-  $("#ready").hide();
+  $("#join_game").click(function() {
+    console.log("Join game clicked");
+    connect();	
+  });
+  
+  $("#disconnect").click(function() {
+    console.log("Disconnect button pressed");
+    disconnect();
+  });
 
   $("#readybutton").click(function() {
     console.log("ready button clicked");
@@ -309,11 +316,12 @@ function connect() {
   ws = new WebSocket('ws://' + document.location.hostname, 'ginrummy');
 
   ws.onopen = function() {
-    username = $("#usernameTextarea").val();
-    game = $("#gameTextarea").val();
+    username = $("#name").val();
+    game = $("#room").val();
 
-    $("#connect").hide();
-    $("#connected").show();
+    $("#launch_screen").css("visibility", "hidden");
+    $("#waiting").css("visibility", "visible");
+    $("#disconnect").css("visibility", "visible")
 
     var data = {};
     data.action = "connect";
@@ -321,14 +329,16 @@ function connect() {
     data.username = username;
     ws.send(JSON.stringify(data));
     console.log("Make sure if they are joining and it is full to show error");
-    setInterval(function() { ping(); }, 120000);
+    //setInterval(function() { ping(); }, 120000);  dont know if I still need to do this
   }
 
   ws.onmessage = function(msg) {
     var data = JSON.parse(msg.data);
     switch(data.action) {
       case 'display_message' :
+        console.log("Displaying a message. Add a new function to display a message box here!")
         $("#messageBox").html(data.message);
+        alert(data.message);
         break;
 
       case 'opponent_quit' :
@@ -352,12 +362,16 @@ function connect() {
   }
 }
 
-function disconnect(msg) {
+function disconnect(msg) {  
   ws.close();
-  $("#connect").show();
-  $("#playing").hide();
-  $("#waiting").show();
-  $("#connected").hide();
+  
+  console.log("In here");
+  
+  //disconnect_box is the class, disconnect is the id
+  $("#disconnect").css("visibility", "hidden");
+  $("#waiting").css("visibility", "hidden");
+  $("#launch_screen").css("visibility", "visible");
+  
   hand = [];
   discardSelection = "";
 }
@@ -465,7 +479,7 @@ function processMessage(msg) {
 }
 
 function ready() {
-  console.log("this player is ready");
+  console.log("switch the ready state");
   playerready = !playerready;
 
   if(playerready)
