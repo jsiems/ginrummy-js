@@ -14,15 +14,27 @@
   <div id="launch_screen" class="launch_screen">
     <div class="title">gin rummy</div>
     <div><div class="input_title">Name:</div><input class="input" id="name" type="text"></div>
-	<div><div class="input_title">Room:</div><input class="input" id="room" type="text"></div>
-	<div class="button" id="join_game">Join Game</div>
+    <div><div class="input_title">Room:</div><input class="input" id="room" type="text"></div>
+    <div class="button" id="join_game">Join Game</div>
   </div>
   
   <div id="waiting" class="waiting_screen">
     <div class="title">waiting for opponent...</div>
+    <div id="waiting_room" class="title"></div>
   </div>
   
   <div id="disconnect" class="disconnect_box">X Disconnect</div>
+  
+  <div id="new_game" class="launch_screen">
+    <div id="new_game_player" class="text_medium"></div>
+    <div class="text_medium"> VS </div>
+    <div id="new_game_opponent" class="text_medium"></div>
+    <div class="button" id="ready_button">Ready</div>
+  </div>
+  
+  <div id="playing_field" class="playing_field_container">
+    <canvas id="canvas" class="canvas"></canvas>
+  </div>
 </body>
 
 </html>

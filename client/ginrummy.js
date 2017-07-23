@@ -1,6 +1,7 @@
 "use strict";
 
 var username;
+var opponent_username;
 var game;
 var ws;
 var hand = [];
@@ -279,6 +280,12 @@ function flip(id) {
 }
 
 $(document).ready(function() {
+  //Loads the canvas dimensions
+	//  otherwise it will look like crap
+	var canvas = $("#canvas");
+	canvas.attr('width', canvas.width());
+	canvas.attr('height', canvas.height());
+  
   $("#join_game").click(function() {
     console.log("Join game clicked");
     connect();	
@@ -289,7 +296,7 @@ $(document).ready(function() {
     disconnect();
   });
 
-  $("#readybutton").click(function() {
+  $("#ready_button").click(function() {
     console.log("ready button clicked");
     ready();
   });
@@ -322,6 +329,7 @@ function connect() {
     $("#launch_screen").css("visibility", "hidden");
     $("#waiting").css("visibility", "visible");
     $("#disconnect").css("visibility", "visible")
+    $("#waiting_room").html("Room: " + game);
 
     var data = {};
     data.action = "connect";
@@ -342,9 +350,12 @@ function connect() {
         break;
 
       case 'opponent_quit' :
-        $("#waiting").show();
-        $("#playing").hide();
-        $("#messageBox").html(data.message);
+        $("#waiting").css("visibility", "visible");
+        $("#new_round").css("visibility", "hidden");
+        //someting about hiding the playing pane
+        //$("#messageBox").html(data.message);
+        alert(data.message);
+        //add some sort of message popup box function
         break;
 
       case 'ping' :
@@ -365,15 +376,15 @@ function connect() {
 function disconnect(msg) {  
   ws.close();
   
-  console.log("In here");
-  
   //disconnect_box is the class, disconnect is the id
   $("#disconnect").css("visibility", "hidden");
   $("#waiting").css("visibility", "hidden");
+  $("#new_game").css("visibility", "hidden");
   $("#launch_screen").css("visibility", "visible");
   
   hand = [];
   discardSelection = "";
+  playerready = 0;
 }
 
 function processMessage(msg) {
@@ -386,24 +397,24 @@ function processMessage(msg) {
     case "NEWGAME":
       console.log("message state is newgame, create appropriate buttons and whatnot");
       hand = [];
-      $("#ready").show();
-      $("#waiting").hide();
-      $("#player").html("me: " + username);
-      $("#opponent").html("opponent: " + (username == msg.username1 ? msg.username2 : msg.username1));
+      $("#new_game").css("visibility", "visible");
+      $("#new_game_player").html(username);
+      opponent_username = (username == msg.username1 ? msg.username2 : msg.username1);
+      $("#new_game_opponent").html(opponent_username);
+      $("#waiting").css("visibility", "hidden");
       break;
 
     case "SET_DECK":
       //this will run at the beginning of each new round
-      $("#ready").hide();
-      $("#playing").show();
+      $("#new_game").css("visibility", "hidden");
+      $("#playing_field").css("visibility", "visible");
       hand = [];
-      $("discardpile").html('discard pile');
       console.log("state is SET_DECK");
+      
+      //sets the players hand and then sorts
       destringDeck(msg.deck);
       hand.sort(function(a, b) { return a.getValue() - b.getValue()});
-      $("#playerhand").html("Hand: " + stringDeck(hand));
-      $("#playerscore").html("Your score: " + msg.myscore);
-      $("#opponentscore").html("Opponent score: " + msg.otherscore);
+      
       displayDeck();
       break;
 
@@ -422,7 +433,6 @@ function processMessage(msg) {
         console.log("unkown message update");
       }
 
-      $("#playerhand").html("Hand: " + stringDeck(hand));
       displayDeck();
       break;
 
@@ -483,9 +493,9 @@ function ready() {
   playerready = !playerready;
 
   if(playerready)
-    $("#readybutton").html("unready");
+    $("#ready_button").html("Unready");
   else
-    $("#readybutton").html("ready");
+    $("#ready_button").html("Ready");
 
   var data = {};
   data.action = "game";
