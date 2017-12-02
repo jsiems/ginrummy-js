@@ -609,6 +609,8 @@ function Game(name_input) {
       return true;
     }
     
+    host.ready = 0;
+    
     console.log("user disconnect");
 
     var data = {};
