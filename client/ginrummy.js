@@ -105,7 +105,7 @@ function Card(valueInput, suitInput) {
     //  r = rotation on 2d plane
     //  s = back or front
     //  t = time in ms
-    this.moveTo = function(xin, yin, rin, s, t) {
+    this.moveTo = function(xin, yin, rin, s, time) {
         //variables
         // nx, ny = new x and new y
         // t = theta, used to calculate nx and ny
@@ -125,21 +125,25 @@ function Card(valueInput, suitInput) {
         //calculate where to place actual x and y based on center input and angle input
         if(rin >= 0 && rin <= 90) {
             t = rin;
+            t = t * Math.PI / 180;
             nx = xin - (ch * Math.sin(t) + cw * Math.cos(t)) / 2 + ch * Math.sin(t);
             ny = yin - (ch * Math.cos(t) + cw * Math.sin(t)) / 2;
         }
         else if(rin > 90 && rin <= 180) {
             t = rin - 90;
+            t = t * Math.PI / 180;
             nx = xin + (cw * Math.sin(t) + ch * Math.cos(t)) / 2;
             ny = yin - (cw * Math.cos(t) + ch * Math.sin(t)) / 2 + ch * Math.sin(t);
         }
         else if(rin > 180 && rin <= 270) {
             t = rin - 180;
+            t = t * Math.PI / 180;
             nx = xin - (ch * Math.sin(t) + cw * Math.cos(t)) / 2 + cw * Math.cos(t);
             ny = yin + (ch * Math.cos(t) + cw * Math.sin(t)) / 2;
         }
         else if(rin > 270 && rin <= 360) {
             t = rin - 270;
+            t = t * Math.PI / 180;
             nx = xin - (cw * Math.sin(t) + ch * Math.cos(t)) / 2;
             ny = yin - (cw * Math.cos(t) + ch * Math.sin(t)) / 2 + cw * Math.cos(t);
         }
@@ -150,7 +154,7 @@ function Card(valueInput, suitInput) {
         
         //if not flipping just move the card
         if(s == side) {
-            anim.to({x: nx, y: ny, rotation: rin}, t, createjs.Ease.getPowInOut(1));
+            anim.to({x: nx, y: ny, rotation: rin}, time, createjs.Ease.getPowInOut(1));
         }
         //flip the card
         else {
@@ -159,7 +163,7 @@ function Card(valueInput, suitInput) {
                       y: (graphics.y + ny) / 2,
                       rotation: (graphics.rotation + rin) / 2,
                       scaleX: 0 }, 
-                    t / 2, 
+                    time / 2, 
                     createjs.Ease.getPowInOut(1));
             anim.call(halfMoveComplete);
             
@@ -178,7 +182,7 @@ function Card(valueInput, suitInput) {
                           y: ny,
                           rotation: rin,
                           scaleX: 1 }, 
-                        t / 2, 
+                        time / 2, 
                         createjs.Ease.getPowInOut(1));
             }
         }
