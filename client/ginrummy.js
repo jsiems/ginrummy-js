@@ -106,6 +106,11 @@ function Card(valueInput, suitInput) {
     //  s = back or front
     //  t = time in ms
     this.moveTo = function(xin, yin, rin, s, time) {
+        if(graphics == null) {
+            console.log("Cannot move card, graphics are null");
+            return;
+        }
+        
         //variables
         // nx, ny = new x and new y
         // t = theta, used to calculate nx and ny
@@ -392,9 +397,8 @@ function addCard(card, deck) {
         deck.push(card);
 }
 
-function displayDeck(deck) {
+function displayDeck(deck = hand) {
     //DRAW the players hand
-    deck = deck || hand;
     var canvaswidth = $("#canvas").css("width").replace("px", "");
     var canvasheight = $("#canvas").css("height").replace("px", "");
     console.log("CONSTANTS:\n\tcanvaswidth: " + canvaswidth + "\n\tcanvasheight: " + canvasheight + "\n\tcw: " + CARDWIDTH + "\n\tch: " + CARDHEIGHT)
@@ -405,41 +409,56 @@ function displayDeck(deck) {
     //    tid == theta initial degrees
     //    tfd == theta final degrees
     //    TI AND TF MUST BE EQUAL
-    var tid = 30;
+    var tid = 10;
     var tfd = 180 - tid;
     var ti = tid * Math.PI / 180;
     var tf = tfd * Math.PI / 180;
     
-    var A = 100;     //amplitude of y curvature
-    var xw = canvaswidth - CARDWIDTH * Math.sin(tf);    //width of x coordinates
-    var yf = CARDWIDTH * Math.cos(ti); //final y distance above y initial
+    //TODO: make these variables able to be changed by user
+    var H = 100;        //height of y curvature in pixels
+    //var W = 400;        //width of x distance of ellipse
     
-    var p = 5
+    //var xmod = (canvaswidth - W) / 2;
+    
+    var xi = (CARDHEIGHT * Math.cos(ti) + CARDWIDTH * Math.sin(ti)) / 2// + xmod;
+    var xf = canvaswidth - xi// - xmod;
+    
+    var yi = (CARDHEIGHT * Math.sin(ti) + CARDWIDTH * Math.cos(ti)) / 2;
+    //yf = yi, they are at same height at beginning and end
+    
+    //Constants used for x and y coordinate calculations
+    var L = (xi + xf) / 2 - xi;
+    var Cx = (xi + xf) / 2;
+    var Cy = yi;
+    console.log("\txi: " + xi + "\n\txf: " + xf + "\n\tyi: " + yi + "\n\tL: " + L + "\n\tCx: " + Cx + "\n\tCy: " + Cy);
     
     for(var i = 0; i < deck.length; i ++) {
         var cardname = deck[i].getValue() + "_of_" + deck[i].getSuit();
         deck[i].setImageString("images/cards/" + cardname + ".png");
 
+        //TODO: change this so it is not new?
         var card = new createjs.Bitmap("images/cards/" + cardname + ".png");
         
-        //x is a linear function from 0 to almost edge of canvas
-        //card.x = i / (deck.length - 1) * (canvaswidth - CARDWIDTH * Math.sin(ti));
-        //card.x = xw / 2 - xw / 2 * Math.cos(2 * Math.PI / (2 * (deck.length - 1)) * i)
-        card.x = -2 * xw / Math.pow(deck.length - 1, 3) * Math.pow(i, 3) + 3 * xw / Math.pow(deck.length - 1, 2) * Math.pow(i, 2)
+        //angle of rotation, AKA theta, in rads
+        var t = Math.PI - (((tf - ti) / (deck.length - 1)) * i + ti);
         
-        //angle of rotation, AKA theta, used for card rotation
-        var t = ((tf - ti) / (xw)) * card.x + ti;
-        
-        card.rotation = (t - Math.PI / 2) * 180 / Math.PI;
-        
-        //y is a sin function of x
-        card.y = canvasheight - (A * Math.sin(2 * Math.PI / (2 * xw) * card.x) + CARDHEIGHT * Math.sin(ti) + yf / xw * card.x);
+        //calculation of x and y coordinates
+        var r = Math.sqrt(H * H * L * L / (H * H * Math.cos(t) * Math.cos(t) + L * L * Math.sin(t) * Math.sin(t)));
+        var x = r * Math.cos(t) + Cx;
+        var y = canvasheight - (r * Math.sin(t) + Cy);
         
         card.cardname = cardname;
+        
         stage.addChild(card);
+        
+        //TODO: combine with TODO above, maybe not create new ones every time? (maybe keep it)
         deck[i].setGraphics(card);
         
-        console.log("CARD: " + cardname + "\n\tx: " + card.x + "\n\ty: " + card.y + "\n\trotation: " + t * 180 / Math.PI)
+        //t = (t - Math.PI / 2) * 180 / Math.PI
+        
+        deck[i].moveTo(x, y, -1 * (t - Math.PI / 2) * 180 / Math.PI, "front", 0);
+        
+        console.log("CARD: " + cardname + "\n\tx: " + x + "\n\ty: " + y + "\n\trotation: " + t * 180 / Math.PI)
         
         $(card).click(function(){
             //use THIS instead of card in this function
