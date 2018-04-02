@@ -403,62 +403,31 @@ function displayDeck(deck = hand) {
     var canvasheight = $("#canvas").css("height").replace("px", "");
     console.log("CONSTANTS:\n\tcanvaswidth: " + canvaswidth + "\n\tcanvasheight: " + canvasheight + "\n\tcw: " + CARDWIDTH + "\n\tch: " + CARDHEIGHT)
 
-    //initial and final angle (theta)
-    //    between card and edge of canvas
-    //    some need degrees, some need radians
-    //    tid == theta initial degrees
-    //    tfd == theta final degrees
-    //    TI AND TF MUST BE EQUAL
-    var tid = 10;
-    var tfd = 180 - tid;
-    var ti = tid * Math.PI / 180;
-    var tf = tfd * Math.PI / 180;
-    
-    //TODO: make these variables able to be changed by user
-    var H = 100;        //height of y curvature in pixels
-    //var W = 400;        //width of x distance of ellipse
-    
-    //var xmod = (canvaswidth - W) / 2;
-    
-    var xi = (CARDHEIGHT * Math.cos(ti) + CARDWIDTH * Math.sin(ti)) / 2// + xmod;
-    var xf = canvaswidth - xi// - xmod;
-    
-    var yi = (CARDHEIGHT * Math.sin(ti) + CARDWIDTH * Math.cos(ti)) / 2;
-    //yf = yi, they are at same height at beginning and end
-    
-    //Constants used for x and y coordinate calculations
-    var L = (xi + xf) / 2 - xi;
-    var Cx = (xi + xf) / 2;
-    var Cy = yi;
-    console.log("\txi: " + xi + "\n\txf: " + xf + "\n\tyi: " + yi + "\n\tL: " + L + "\n\tCx: " + Cx + "\n\tCy: " + Cy);
-    
+    var xi = CARDWIDTH / 2;
+    var xf = canvaswidth - xi;
+
     for(var i = 0; i < deck.length; i ++) {
         var cardname = deck[i].getValue() + "_of_" + deck[i].getSuit();
         deck[i].setImageString("images/cards/" + cardname + ".png");
 
-        //TODO: change this so it is not new?
+        //TODO: change this so it is not new? everytime display deck is run it will create a new "card" bitmap object. This might overflow memory? Not sure
         var card = new createjs.Bitmap("images/cards/" + cardname + ".png");
-        
-        //angle of rotation, AKA theta, in rads
-        var t = Math.PI - (((tf - ti) / (deck.length - 1)) * i + ti);
-        
-        //calculation of x and y coordinates
-        var r = Math.sqrt(H * H * L * L / (H * H * Math.cos(t) * Math.cos(t) + L * L * Math.sin(t) * Math.sin(t)));
-        var x = r * Math.cos(t) + Cx;
-        var y = canvasheight - (r * Math.sin(t) + Cy);
-        
         card.cardname = cardname;
-        
         stage.addChild(card);
         
         //TODO: combine with TODO above, maybe not create new ones every time? (maybe keep it)
         deck[i].setGraphics(card);
-        
-        //t = (t - Math.PI / 2) * 180 / Math.PI
-        
-        deck[i].moveTo(x, y, -1 * (t - Math.PI / 2) * 180 / Math.PI, "front", 0);
-        
-        console.log("CARD: " + cardname + "\n\tx: " + x + "\n\ty: " + y + "\n\trotation: " + t * 180 / Math.PI)
+
+        setTimeout(function(index, deck){
+            console.log("attempting to move card, i: " + index);
+
+            var x = (xf - xi) / (deck.length - 1) * index + xi;
+            var y = canvasheight - CARDHEIGHT / 2;
+            var t = 0;
+
+            deck[index].moveTo(x, y, t, "front", 200);
+            console.log("CARD: " + cardname + "\n\tx: " + x + "\n\ty: " + y);
+        }, 500 * i, i, deck);
         
         $(card).click(function(){
             //use THIS instead of card in this function
@@ -472,6 +441,8 @@ function displayDeck(deck = hand) {
             createjs.Tween.get(this, {loop: false})
                 .to({rotation: -1 * this.rotation}, 500, createjs.Ease.getPowInOut(1))
         });
+
+        //TODO: add mouse enter and mouse leave functions!!
     }
 
     //ADD THE MIDDLE DECK TO THE SCREEN    ************
@@ -497,6 +468,8 @@ function displayDeck(deck = hand) {
     stage.addChild(deck);
     stage.addChild(discard);
 
+    //ADD OPPONENT DECK TO SCREEN
+
     
     /*
     $(".card").click(function() {
@@ -515,7 +488,7 @@ function displayDeck(deck = hand) {
 }
 
 function connect() {
-    ws = new WebSocket('ws://' + document.location.hostname, 'ginrummy');
+    ws = new WebSocket('wss://' + document.location.hostname, 'ginrummy');
 
     ws.onopen = function() {
         username = $("#name").val();
@@ -562,7 +535,8 @@ function connect() {
                 $("#ready_button").html("Unready");
                 //someting about hiding the playing pane
                 //$("#messageBox").html(data.message);
-                alert(data.message);
+                //alert(data.message);
+                console.log(data.message);
                 //add some sort of message popup box function
                 break;
 
